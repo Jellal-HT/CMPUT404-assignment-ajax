@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="license" content="
         Copyright 2013 Abram Hindle
+        Copyright 2022 Yicheng Hu
         
         Licensed under the Apache License, Version 2.0 (the "License");
         you may not use this file except in compliance with the License.
@@ -41,6 +42,7 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
                     //XXX: parse some JSON from the request!
                     var data = JSON.parse(xhr.responseText)
                     //XXX: Pass the data to the callback!
+                    callback(data)
                 }
             } 
             catch(e) {
@@ -255,16 +257,16 @@ mouse = (function() {
 // Add the application specific mouse listeners!
 //XXX: TODO Make these prettier!
 mouse.mousedowners.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'blue','radius':8});
+    addEntityWithoutName({'x':x,'y':y,'colour':'#9c4471','radius':20});
 });
 
 mouse.mouseuppers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'red','radius':8});
+    addEntityWithoutName({'x':x,'y':y,'colour':'#09b8e8','radius':20});
 });
 
 mouse.mousedraggers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'green',
-                          'radius':10});
+    addEntityWithoutName({'x':x,'y':y,'colour':'#7a9299',
+                          'radius':20});
 });
 
 
@@ -280,8 +282,20 @@ function update() {
 // 30 frames per second
 setInterval( update, 1000/30.0);
 
+function clearScreen() {
+    sendJSONXMLHTTPRequest("http://"+host+"/clear", {}, function(json) {
+        world = json;
+        drawNextFrame();
+    });
+};
+
+
+
+
 
 
     </script>
+
+<button onclick ="clearScreen()">Clear Screen</button>
 </body>
 </html>
